@@ -1,5 +1,5 @@
 # Import the data, filter, and log transform ####
-Import <- read.csv("training_pool_save2.csv")
+Import <- read.csv("training_pool.csv")
 
 # Select only the elemental data used for training the ANN
 data_in <- Import[Import$is_ok == 1, 4:16]
