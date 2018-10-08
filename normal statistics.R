@@ -1,5 +1,5 @@
 # Import the data, filter, and log transform ####
-Import <- read.csv("C:/Users/Lowell Moore/Google Drive/GSRS/GSRS 2018/test 3/training_pool_save2.csv")
+Import <- read.csv("training_pool_save2.csv")
 
 # Select only the elemental data used for training the ANN
 data_in <- Import[Import$is_ok == 1, 4:16]
@@ -94,7 +94,7 @@ linear <- lm(formula = CO2.PPM. ~ SIO2.WT..
 
 prediction <- predict(linear, newdata = testing[, 2:ncol(testing)], level = 0.95, type = "response", interval = "p", na.action = na.exclude)
 
-pdf("C:/Users/Lowell Moore/Desktop/linear_prediction.pdf", width = 5, height = 5)
+pdf("linear_prediction.pdf", width = 5, height = 5)
 plot(prediction[,1], testing[,1])
 abline(0, 1, col = "red")
 dev.off()
@@ -132,13 +132,15 @@ testing <- data_in[testing,]
 tree2 <- ctree(formula = CO2.PPM. ~ SIO2.WT.. + TIO2.WT.. + AL2O3.WT.. + FeOT_calc + MGO.WT.. + CAO.WT.. + NA2O.WT.. + K2O.WT.. + P2O5.WT.. + NB.PPM. + CE.PPM. + LA.PPM.
                , data = training)
 
-pdf("C:/Users/Lowell Moore/Desktop/tree2.pdf", width = 20, height = 8)
+# Save .pdf figure
+pdf("tree2.pdf", width = 20, height = 8)
 plot(tree2)
 dev.off()
 
 prediction <- predict(tree2, newdata = testing[, 2:ncol(testing)])
 
-pdf("C:/Users/Lowell Moore/Desktop/tree2_prediction.pdf", width = 5, height = 5)
+# Save .pdf figure
+pdf("tree2_prediction.pdf", width = 5, height = 5)
 plot(prediction, testing[,1])
 abline(0, 1, col = "red")
 dev.off()
@@ -158,6 +160,7 @@ testing <- which(!(1:nrow(data_in.c) %in% training))
 training <- data_in.c[training,]
 testing <- data_in.c[testing,]
 
+# Train neural network
 nn <- neuralnet(formula = CO2.PPM. ~ SIO2.WT..
              + TIO2.WT..
              + AL2O3.WT..
@@ -205,8 +208,8 @@ ys <- numeric(0); for(i in 1:nrow(ys_all)){ys[i] <- mean(ys_all[i,])}
 points(xs, ys, pch = 21, bg = "purple")
 print(cor(xs, ys))
 
-# boring gwplots
-pdf("C:/Users/Lowell Moore/Desktop/standard gwplot.pdf", width = 12, height = 9)
+# General weight plots
+pdf("standard gwplot.pdf", width = 12, height = 9)
 par(mfrow = c(3, 5))
 for(i in 1:13){
   gwplot(nn, rep = 1,selected.covariate = i)
